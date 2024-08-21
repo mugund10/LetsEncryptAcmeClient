@@ -17,7 +17,6 @@ var (
 // filename      string = "orgAccount.json"
 )
 
-
 // default url is staging
 var url *string = &stagingurl
 
@@ -37,7 +36,7 @@ func Newurl(nurl string) {
 }
 
 type Client struct {
-	acme *acme.Client
+	acme_client *acme.Client
 }
 
 //creates new client with given private key
@@ -48,36 +47,32 @@ type Client struct {
 func NewClient(pkey *rsa.PrivateKey) Client {
 	var ca Client
 	client := acme.Client{Key: pkey, DirectoryURL: *url}
-	ca.acme = &client
+	ca.acme_client = &client
 	return ca
 }
 
-//register a new account with acme server or
-//loads the old Registered account with same account name or
-//even changes the privkey of the account if its not same.
-//( for contactaddress use "mailto:example@example.com" )
-func(ca Client) RegisterAccount(accountName string, contactaddress string){
+// registers a new account with acme server or
+// retrieves old registered account with the given private key
+// ( for contactaddress use this "mailto:example@example.com" format )
+func (ca *Client) RegisterAccount(accountName string, contactaddress string) {
 
-
-	account := account.NewAccount(accountName,contactaddress)
+	account := account.NewAccount(accountName, contactaddress)
 	if err := account.Load(); err != nil {
-		fmt.Printf("no account found, (error : %s)\n",err)
+		fmt.Printf("no account found, (error : %s)\n", err)
 		fmt.Printf("So Registering new account \n")
-		if err := account.Register(context.Background(),ca.acme); err != nil{
-			fmt.Println(err)
-		 }
-		 fmt.Println("from Register",account)
-	}else{
-
-		fmt.Println("from load",account)
+		if err := account.Register(context.Background(), ca.acme_client); err != nil {
+			fmt.Println(err) //account retrieved by private key if the json gets deleted
+			if err := account.GetAccount(context.Background(), ca.acme_client); err != nil {
+				fmt.Println(err)
+			}
+		}
+		
 	} 
-
+	//return account
 }
 
-
-
-// adds the domain or subdomain for your order
-func AddDomain(addr string) *[]acme.AuthzID {
-	domain := []acme.AuthzID{{Type: "dns", Value: addr}}
-	return &domain
-}
+// // adds the domain or subdomain for your order
+// func (ca *Client) AddDomain(domainAddr string) {
+// 	domain := []acme.AuthzID{{Type: "dns", Value: domainAddr}}
+// 	return &domain
+// }

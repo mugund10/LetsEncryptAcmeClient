@@ -37,7 +37,7 @@ func (am *accountMan) Register(ctx context.Context, client *acme.Client) error {
 
 // saves the mainAccount data into json
 func (am *accountMan) saveAccount() error {
-	fname := fmt.Sprintf("%s.json",am.fname)
+	fname := fmt.Sprintf("%s.json", am.fname)
 	file, err := os.Create(fname)
 	if err != nil {
 		return err
@@ -50,7 +50,7 @@ func (am *accountMan) saveAccount() error {
 
 // loads the json file data into mainAccount
 func (am *accountMan) Load() error {
-	fname := fmt.Sprintf("%s.json",am.fname)
+	fname := fmt.Sprintf("%s.json", am.fname)
 	file, err := os.Open(fname)
 	if err != nil {
 		return err
@@ -61,3 +61,17 @@ func (am *accountMan) Load() error {
 	return newDecoder.Decode(&am.accountHolder)
 
 }
+
+// retrieves account using private key
+func (am *accountMan) GetAccount(ctx context.Context, client *acme.Client) error {
+	mainAccount, err := client.GetReg(ctx, am.accountHolder.URI)
+	if err != nil {
+		fmt.Println("not matched so updating")
+		return err
+	}
+	am.accountHolder = mainAccount
+	am.saveAccount()
+	return nil
+}
+
+
