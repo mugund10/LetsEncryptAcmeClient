@@ -16,7 +16,7 @@ type keyMan struct {
 	name    string
 }
 
-// creates new new instance
+// creates a new instance
 func New() keyMan {
 	var km keyMan
 	return km
