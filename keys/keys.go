@@ -34,6 +34,8 @@ func(km *keyMan) KeyGen(keyname string) error {
 	return nil
 }
 
+// use keys.LoadKey() first to ensure there is no key present locally in the same name
+// otherwise it will overwrite the old key with same name
 // saves the RSA PrivateKey into pem format,
 func (km *keyMan) SaveKey() error {
 	keyname := fmt.Sprintf("%s.pem", km.name)
