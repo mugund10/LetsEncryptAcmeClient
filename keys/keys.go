@@ -24,7 +24,6 @@ func New() keyMan {
 
 // generates random rsa keys with 2048 bits
 func(km *keyMan) KeyGen(keyname string) error {
-	
 	key, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
 		return err
