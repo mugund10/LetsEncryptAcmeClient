@@ -29,6 +29,7 @@ func New(accountName, contact string) accountMan {
 	return am
 }
 
+// 	creates a home for your certificate management
 func NewCert(certname string) certMan {
 	var cM certMan
 	cM.name = certname
