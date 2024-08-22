@@ -36,33 +36,30 @@ func HandleHTTPChallenge(clie *acme.Client, ctx context.Context, chall *acme.Cha
 			log.Fatalf("HTTP server failed: %v", err)
 		}
 	}()
-	fmt.Println("Temporary HTTP server started, serving the challenge.")
-
+	fmt.Println("Temporary HTTP server started, on Port 80")
 	// Accept the challenge
 	_, err = clie.Accept(ctx, chall)
 	if err != nil {
 		return fmt.Errorf("failed to accept HTTP-01 challenge: %v", err)
 	}
-
 	// Wait for authorization to complete
 	auth, err := clie.WaitAuthorization(ctx, chall.URI)
 	if err != nil {
 		return fmt.Errorf("failed to wait for authorization: %v", err)
 	}
-
 	if auth.Status == acme.StatusValid {
 		fmt.Println("Authorization completed successfully.")
 	} else {
 		return fmt.Errorf("authorization failed with status: %s", auth.Status)
 	}
-
-	// Shutdown the temporary server
-	shutdownCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	// closing the temporary server
+	closeCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
-	if err := srv.Shutdown(shutdownCtx); err != nil {
+	if err := srv.Shutdown(closeCtx); err != nil {
 		return fmt.Errorf("failed to shut down HTTP server: %v", err)
 	}
-	fmt.Println("Temporary HTTP server stopped.")
-
 	return nil
 }
+
+
+//other challenges will be implemented soon
