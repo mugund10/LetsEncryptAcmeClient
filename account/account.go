@@ -16,7 +16,7 @@ type accountMan struct {
 
 // creates new account for your certificates
 // the contact should be like mailto:abc.gmail.com
-func NewAccount(accountName string, contact string) accountMan {
+func New(accountName string, contact string) accountMan {
 	var am accountMan
 	acme_account := acme.Account{Contact: []string{contact}}
 	am.accountHolder = &acme_account
@@ -56,7 +56,6 @@ func (am *accountMan) Load() error {
 		return err
 	}
 	defer file.Close()
-
 	newDecoder := json.NewDecoder(file)
 	return newDecoder.Decode(&am.accountHolder)
 
@@ -73,5 +72,3 @@ func (am *accountMan) GetAccount(ctx context.Context, client *acme.Client) error
 	am.saveAccount()
 	return nil
 }
-
-

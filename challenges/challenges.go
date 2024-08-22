@@ -12,16 +12,15 @@ import (
 
 // handleHTTPChallenge starts a temporary HTTP server to respond to the HTTP-01 challenge.
 func HandleHTTPChallenge(clie *acme.Client, ctx context.Context, chall *acme.Challenge) error {
-
 	keyAuth, err := clie.HTTP01ChallengeResponse(chall.Token)
 	if err != nil {
 		return fmt.Errorf("failed to generate key authorization: %v", err)
 	}
-
-	// Start a temporary HTTP server
+	// Starting HTTP server (temporary)
 	srv := &http.Server{
 		Addr: ":80",
 		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			// reference https://letsencrypt.org/docs/challenge-types/
 			challengePath := "/.well-known/acme-challenge/" + chall.Token
 			if r.URL.Path == challengePath {
 				w.WriteHeader(http.StatusOK)
@@ -31,7 +30,7 @@ func HandleHTTPChallenge(clie *acme.Client, ctx context.Context, chall *acme.Cha
 			}
 		}),
 	}
-
+	// runs concurrently
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("HTTP server failed: %v", err)
