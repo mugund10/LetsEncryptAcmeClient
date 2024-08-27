@@ -75,6 +75,7 @@ func (ca *client) RegisterAccount(accountName string, contactaddress string) {
 	}
 }
 
+//gets tls certificates from Certificate Authority(letsEncrypt.org)
 func (ca *client) GetTLS(domainAddress string) {
 	order := orders.New(domainAddress)
 	order.Create(context.Background(), ca.acme_client)
