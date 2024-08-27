@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/mugund10/LetsEncryptAcmeClient"
+	"github.com/mugund10/LetsEncryptAcmeClient/leacme"
 )
 
 func main() {
