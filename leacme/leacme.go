@@ -1,4 +1,4 @@
-package letsencryptacmeclient
+package leacme
 
 import (
 	"context"
