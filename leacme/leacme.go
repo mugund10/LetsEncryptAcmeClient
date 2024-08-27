@@ -29,15 +29,18 @@ type client struct {
 // if you already have a private key in the pem
 // form just use the name of the file
 func NewKey(keyName string) *rsa.PrivateKey {
-	key := keys.New()
-	err := key.RsaGen(keyName)
-	errs.CheckError(err)
+	key := keys.New(keyName)
 	reads := key.LoadPem()
 	if reads != nil {
-		fmt.Println("key not found locally, so saving newly generated key")
+		err := key.RsaGen()
+		errs.CheckError(err)
+		fmt.Println("[ keys ] key not found locally, so saving newly generated key")
 		saves := key.SaveAsPem()
 		errs.CheckError(saves)
+	} else {
+		fmt.Println("[ keys ] key found locally")
 	}
+
 	return key.Private
 }
 
@@ -63,19 +66,22 @@ func NewClient(pkey *rsa.PrivateKey, stagingUrl bool) client {
 func (ca *client) RegisterAccount(accountName string, contactaddress string) {
 	//here account is variable name and Account is package name
 	account := Account.New(accountName, contactaddress)
-	if err := account.Load(); err != nil {
-		fmt.Printf("no account found, (error : %s)\n", err)
-		fmt.Printf("So Registering new account \n")
-		if err := account.Register(context.Background(), ca.acme_client); err != nil {
-			fmt.Println(err) //account retrieved by private key if the json gets deleted
-			if err := account.GetAccount(context.Background(), ca.acme_client); err != nil {
-				fmt.Println(err)
-			}
+
+	if err := account.Register(context.Background(), ca.acme_client); err != nil {
+		fmt.Println("[ accounts ] An account is already linked with this privatekey")
+
+		fmt.Println(err) //account retrieved by private key if the json gets deleted
+		if err := account.GetAccount(context.Background(), ca.acme_client); err != nil {
+			fmt.Println("[ accounts ] Retrieving details from the server")
+			fmt.Println(err)
 		}
+	} else {
+		fmt.Println("[ accounts ] A New Account is Registered with this privatekey")
 	}
+
 }
 
-//gets tls certificates from Certificate Authority(letsEncrypt.org)
+// gets tls certificates from Certificate Authority(letsEncrypt.org)
 func (ca *client) GetTLS(domainAddress string) {
 	order := orders.New(domainAddress)
 	order.Create(context.Background(), ca.acme_client)
