@@ -6,6 +6,8 @@ import (
 	"fmt"
 
 	"github.com/mugund10/LetsEncryptAcmeClient/Account"
+	"github.com/mugund10/LetsEncryptAcmeClient/errs"
+	"github.com/mugund10/LetsEncryptAcmeClient/keys"
 	"github.com/mugund10/LetsEncryptAcmeClient/orders"
 	"golang.org/x/crypto/acme"
 )
@@ -23,9 +25,26 @@ type client struct {
 	acme_client *acme.Client
 }
 
+//creates new rsa key with the given name or
+//if you already have a private key in the pem 
+//form just use the name of the file
+func NewKey(keyName string) *rsa.PrivateKey {
+	key := keys.New()
+	err := key.RsaGen(keyName)
+	errs.CheckError(err)
+	reads := key.LoadPem()
+	if reads != nil {
+		fmt.Println("key not found locally, so saving newly generated key")
+		saves := key.SaveAsPem()
+		errs.CheckError(saves)
+	}
+	return key.Private
+}
+
 // creates new client with given private key
 // for stagingUrl ("https://acme-staging-v02.api.letsencrypt.org/directory") value must be true
 // if its false productionUrl will be used  productionurl string "https://acme-v02.api.letsencrypt.org/directory"
+//for "pkey" use leacme.NewKey()
 func NewClient(pkey *rsa.PrivateKey, stagingUrl bool) client {
 	if stagingUrl {
 		url = &stagingurl
@@ -56,7 +75,7 @@ func (ca *client) RegisterAccount(accountName string, contactaddress string) {
 	}
 }
 
-func (ca *client) Order4Domain(domainAddress string) {
+func (ca *client) GetTLS(domainAddress string) {
 	order := orders.New(domainAddress)
 	order.Create(context.Background(), ca.acme_client)
 	order.Finish(ca.acme_client)

@@ -11,12 +11,12 @@ import (
 	"fmt"
 	"os"
 )
-
+//type for keymanagement
 type keyMan struct {
 	Private *rsa.PrivateKey
 	name    string
 }
-
+//type for csrmanagement
 type csrMan struct {
 	Bytes []byte
 	name  string
