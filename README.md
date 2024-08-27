@@ -13,7 +13,7 @@ a client to manage TLS certificates with LetsEncrypt.org
 ## usage
 
 ```bash
-go install github.com/mugund10/LetsEncryptAcmeClient/leacme@latest
+go install github.com/mugund10/LetsEncryptAcmeClient@latest
 ```
 
     key := leacme.NewKey("account")
