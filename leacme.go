@@ -1,4 +1,4 @@
-package letsencryptacmeclient
+package LetsEncryptAcmeClient
 
 import (
 	"context"
