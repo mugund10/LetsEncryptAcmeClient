@@ -16,8 +16,8 @@ a client to manage TLS certificates with LetsEncrypt.org
 go install github.com/mugund10/LetsEncryptAcmeClient@latest
 ```
 
-    key := leacme.NewKey("account")
-    client := leacme.NewClient(key, true)
+    key := letsencryptacmeclient.NewKey("account")
+    client := letsencryptacmeclient.NewClient(key, true)
     client.RegisterAccount("yourAccountName-itCanBeAnything", "mailto:example@gmail.com")
     client.GetTLS("subdomain(if needed).domain.tld(mostly .com or .in)")
 
@@ -26,13 +26,13 @@ go install github.com/mugund10/LetsEncryptAcmeClient@latest
     package main
 
     import (
-    "github.com/mugund10/LetsEncryptAcmeClient/leacme"
+        "github.com/mugund10/LetsEncryptAcmeClient"
     )
 
     func main() {
-    key := leacme.NewKey("account")
-    client := leacme.NewClient(key, true)
-    client.RegisterAccount("mugund10", "mailto:example@gmail.com")
-    client.GetTLS("homeserver.mugund10.top")
+        key := letsencryptacmeclient.NewKey("account")
+        client := letsencryptacmeclient.NewClient(key, true)
+        client.RegisterAccount("mugund10", "mailto:example@gmail.com")
+        client.GetTLS("homeserver.mugund10.top")
 
     }
