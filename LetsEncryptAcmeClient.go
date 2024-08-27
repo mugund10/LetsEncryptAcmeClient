@@ -1,4 +1,4 @@
-package leacme
+package LetsEncryptAcmeClient
 
 import (
 	"context"
@@ -25,9 +25,9 @@ type client struct {
 	acme_client *acme.Client
 }
 
-//creates new rsa key with the given name or
-//if you already have a private key in the pem 
-//form just use the name of the file
+// creates new rsa key with the given name or
+// if you already have a private key in the pem
+// form just use the name of the file
 func NewKey(keyName string) *rsa.PrivateKey {
 	key := keys.New()
 	err := key.RsaGen(keyName)
@@ -44,7 +44,7 @@ func NewKey(keyName string) *rsa.PrivateKey {
 // creates new client with given private key
 // for stagingUrl ("https://acme-staging-v02.api.letsencrypt.org/directory") value must be true
 // if its false productionUrl will be used  productionurl string "https://acme-v02.api.letsencrypt.org/directory"
-//for "pkey" use leacme.NewKey()
+// for "pkey" use leacme.NewKey()
 func NewClient(pkey *rsa.PrivateKey, stagingUrl bool) client {
 	if stagingUrl {
 		url = &stagingurl
