@@ -12,9 +12,7 @@ a client to manage TLS certificates with LetsEncrypt.org
 
 ## usage
 
-```bash
-go install github.com/mugund10/LetsEncryptAcmeClient@latest
-```
+
 
     key := LetsEncryptAcmeClient.NewKey("account")
     client := LetsEncryptAcmeClient.NewClient(key, true)
@@ -36,3 +34,8 @@ go install github.com/mugund10/LetsEncryptAcmeClient@latest
         client.GetTLS("homeserver.mugund10.top")
 
     }
+
+
+```bash
+go install github.com/mugund10/LetsEncryptAcmeClient@latest
+```
