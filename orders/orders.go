@@ -75,8 +75,8 @@ func (om *orderMan) Finish(cli *acme.Client) {
 	cert := Account.NewCert(dom)
 	var certurl string
 	kname := fmt.Sprintf("pk[%s]", dom)
-	key := keys.New()
-	err := key.RsaGen(kname)
+	key := keys.New(kname)
+	err := key.RsaGen()
 	errs.CheckError(err)
 	readsRsa := key.LoadPem()
 	if readsRsa != nil {
