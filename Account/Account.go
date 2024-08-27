@@ -29,7 +29,7 @@ func New(accountName, contact string) accountMan {
 	return am
 }
 
-// 	creates a home for your certificate management
+// creates a home for your certificate management
 func NewCert(certname string) certMan {
 	var cM certMan
 	cM.name = certname
@@ -43,22 +43,23 @@ func (am *accountMan) Register(ctx context.Context, client *acme.Client) error {
 		return err
 	}
 	am.accountHolder = mainAccount
-	am.saveAccount()
+	//am.saveAccount()
 	return nil
 }
 
 // saves the mainAccount data into json
-func (am *accountMan) saveAccount() error {
-	fname := fmt.Sprintf("%s.json", am.fname)
-	file, err := os.Create(fname)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
+//not using now
+// func (am *accountMan) saveAccount() error {
+// 	fname := fmt.Sprintf("%s.json", am.fname)
+// 	file, err := os.Create(fname)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	defer file.Close()
 
-	newEncoder := json.NewEncoder(file)
-	return newEncoder.Encode(&am.accountHolder)
-}
+// 	newEncoder := json.NewEncoder(file)
+// 	return newEncoder.Encode(&am.accountHolder)
+// }
 
 // saves the url of the certificate as json
 func (cM *certMan) Save(certurl string) error {
@@ -75,19 +76,20 @@ func (cM *certMan) Save(certurl string) error {
 }
 
 // loads the json file data into mainAccount
-func (am *accountMan) Load() error {
-	fname := fmt.Sprintf("%s.json", am.fname)
-	file, err := os.Open(fname)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-	newDecoder := json.NewDecoder(file)
-	return newDecoder.Decode(&am.accountHolder)
+//not using now
+// func (am *accountMan) Load() error {
+// 	fname := fmt.Sprintf("%s.json", am.fname)
+// 	file, err := os.Open(fname)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	defer file.Close()
+// 	newDecoder := json.NewDecoder(file)
+// 	return newDecoder.Decode(&am.accountHolder)
 
-}
+// }
 
-//loads certificates url from json
+// loads certificates url from json
 func (cM *certMan) Load() error {
 	fname := fmt.Sprintf("%s.json", cM.name)
 	file, err := os.Open(fname)
@@ -108,8 +110,6 @@ func (am *accountMan) GetAccount(ctx context.Context, client *acme.Client) error
 		return err
 	}
 	am.accountHolder = mainAccount
-	am.saveAccount()
+	//am.saveAccount()
 	return nil
 }
-
-
