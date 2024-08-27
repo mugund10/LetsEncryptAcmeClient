@@ -22,20 +22,21 @@ type csrMan struct {
 	name  string
 }
 
-// creates a new instance
-func New() keyMan {
+// creates a new instance with given keyname
+func New(keyname string) keyMan {
 	var km keyMan
+	km.name = keyname
 	return km
 }
 
 // generates random rsa keys with 2048 bits
-func (km *keyMan) RsaGen(keyname string) error {
+func (km *keyMan) RsaGen() error {
 	key, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
 		return err
 	}
 	km.Private = key
-	km.name = keyname
+	
 	return nil
 }
 
