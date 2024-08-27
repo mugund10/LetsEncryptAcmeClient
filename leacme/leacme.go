@@ -18,7 +18,6 @@ var (
 	stagingurl    string = "https://acme-staging-v02.api.letsencrypt.org/directory"
 )
 
-// default url is staging
 var url *string
 
 type client struct {
@@ -64,16 +63,16 @@ func NewClient(pkey *rsa.PrivateKey, stagingUrl bool) client {
 // retrieves old registered account with the given private key
 // ( for contactaddress use this "mailto:example@example.com" format )
 func (ca *client) RegisterAccount(accountName string, contactaddress string) {
-	//here account is variable name and Account is package name
-	account := Account.New(accountName, contactaddress)
 
-	if err := account.Register(context.Background(), ca.acme_client); err != nil {
+	acc := Account.New(accountName, contactaddress)
+
+	if err := acc.Register(context.Background(), ca.acme_client); err != nil {
 		fmt.Println("[ accounts ] An account is already linked with this privatekey")
 
-		fmt.Println(err) //account retrieved by private key if the json gets deleted
-		if err := account.GetAccount(context.Background(), ca.acme_client); err != nil {
-			fmt.Println("[ accounts ] Retrieving details from the server")
-			fmt.Println(err)
+		//fmt.Println(err) //account retrieved by private key if the json gets deleted
+		if err := acc.GetAccount(context.Background(), ca.acme_client); err != nil {
+			fmt.Println("[ accounts ] Error retrieving details from the server")
+			//fmt.Println(err)
 		}
 	} else {
 		fmt.Println("[ accounts ] A New Account is Registered with this privatekey")
@@ -81,7 +80,7 @@ func (ca *client) RegisterAccount(accountName string, contactaddress string) {
 
 }
 
-// gets tls certificates from Certificate Authority(letsEncrypt.org)
+// gets tls certificates for the domain address
 func (ca *client) GetTLS(domainAddress string) {
 	order := orders.New(domainAddress)
 	order.Create(context.Background(), ca.acme_client)
