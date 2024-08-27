@@ -20,7 +20,7 @@ a client to manage TLS certificates with LetsEncrypt.org
     package main
 
     import (
-        "github.com/mugund10/LetsEncryptAcmeClient/leacme"
+       leacme "github.com/mugund10/LetsEncryptAcmeClient/leacme"
     )
 
     func main() {
