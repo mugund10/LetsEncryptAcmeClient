@@ -33,12 +33,12 @@ func New(domainAddress string) orderMan {
 func (om *orderMan) Create(ctx context.Context, client *acme.Client) {
 	order, err := client.AuthorizeOrder(ctx, om.domain)
 	if err != nil {
-		log.Fatalf("failed to authorize order : %v", err)
+		log.Fatalf("[ order ] failed to authorize order : %v", err)
 	} //after sends order the acme server need to verify the
 	for _, authurl := range order.AuthzURLs {
 		auth, err := client.GetAuthorization(ctx, authurl)
 		if err != nil {
-			log.Fatalf("failed to get authorization: %v", err)
+			log.Fatalf("[ order ] failed to get authorization: %v", err)
 		} // challenges are for to prove the control over domain
 		for _, challenge := range auth.Challenges {
 			// "http-01" only implemented
@@ -47,18 +47,18 @@ func (om *orderMan) Create(ctx context.Context, client *acme.Client) {
 				// Handles the HTTP-01 challenge
 				err := challenges.HandleHTTPChallenge(client, ctx, challenge)
 				if err != nil {
-					log.Fatalf("Failed to handle HTTP-01 challenge: %v", err)
+					log.Fatalf("[ order ] Failed to handle HTTP-01 challenge: %v", err)
 				}
 				// Wait for the entire authorization to complete
 				auth, err = client.WaitAuthorization(ctx, auth.URI)
 				if err != nil {
-					log.Fatalf("Failed to wait for authorization: %v", err)
+					log.Fatalf("[ order ] Failed to wait for authorization: %v", err)
 				}
 				// Check the status of the authorization and its challenges
 				if auth.Status == acme.StatusValid {
-					fmt.Printf("Authorization completed successfully: %+v\n", auth)
+					fmt.Printf("[ order ] Authorization completed successfully: %+v\n", auth)
 				} else {
-					fmt.Printf("Authorization failed or is still pending: %+v\n", auth)
+					fmt.Printf("[ order ] Authorization failed or is still pending: %+v\n", auth)
 				}
 				break
 			}
@@ -80,7 +80,7 @@ func (om *orderMan) Finish(cli *acme.Client) {
 	errs.CheckError(err)
 	readsRsa := key.LoadPem()
 	if readsRsa != nil {
-		fmt.Println("key not found locally, so saving newly generated key")
+		fmt.Println("[ order ] key not found locally, so saving newly generated key")
 		saves := key.SaveAsPem()
 		errs.CheckError(saves)
 	}
